@@ -217,9 +217,7 @@ public:
             for (int i1_network = 0; i1_network < NETWORK_WEIGHT_NUM; i1_network++) {
                 for (int i2_network = 0; i2_network < IN_ROW; i2_network++) {
                     for (int i3_network = 0; i3_network < IN_LINE; i3_network++) {
-                        //cout << ix_network << ' ' << i1_network << ' ' << i2_network << ' ' << i3_network << endl;
                         NETWORK_LAST_WANT[i1_network][i2_network][i3_network] = 0;
-                        
                     }
                 }
             }
