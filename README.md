@@ -11,7 +11,7 @@
 
 首先，添加库文件
 
-  #include "WNOTEWORK.hpp"
+   #include "WNOTEWORK.hpp"
 
 其次，创建一个神经网络对象
 
