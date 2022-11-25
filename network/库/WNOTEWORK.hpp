@@ -5,57 +5,65 @@ typedef double (*Activation_function_Derivatives_NETWORK_) (double in_);
 typedef double (*Function_based) (vector<double> target_, vector<double> Network_OUT);
 class WLZH_network {
 public:
-    int IN_ROW = 28, IN_LINE = 28;
-    int LAST_NETWORK_WEIGHT_NUM = 10;//×îºóÒ»²ãÉñ¾­ÍøÂçÉñ¾­ÔªÊıÁ¿
-    int NETWORK_WEIGHT_NUM = 2;//³ı×îºóÒ»²ãÍâÉñ¾­ÍøÂç²ãÊı
+    int IN_ROW = 1, IN_LINE = 1;
+    int LAST_NETWORK_WEIGHT_NUM = 10;//æœ€åä¸€å±‚ç¥ç»ç½‘ç»œç¥ç»å…ƒæ•°é‡
+    int NETWORK_WEIGHT_NUM = 2;//é™¤æœ€åä¸€å±‚å¤–ç¥ç»ç½‘ç»œå±‚æ•°
     double learn_rate;
-    //³õÊ¼»¯ÒÀ´ÎÎªÊäÈëĞĞ¡¢ÁĞ¡¢³ı×îºóÒ»²ãÍâÉñ¾­ÍøÂç²ãÊı¡¢×îºóÒ»²ãÉñ¾­ÍøÂçÉñ¾­ÔªÊıÁ¿
+    
+    vector<vector<double>> IN_IMAGE_DATA;//è¾“å…¥æ•°æ®
+    vector<vector<vector<double>>> RUN_NETWORK_PROCESS;//ç”¨äºå­˜å‚¨ç¥ç»ç½‘ç»œè¿ç®—è¿‡ç¨‹
+    vector<vector<vector<double>>> RUN_NETWORK_PROCESS_FOR_BP;//ç”¨äºå­˜å‚¨ç¥ç»ç½‘ç»œè¿ç®—è¿‡ç¨‹ä¸ºäº†åå‘ä¼ æ’­ç®—æ³•
+    vector<double> RUN_NETWORK_PROCESS_LAST_FOR_BP;//ç”¨äºå­˜å‚¨æœ€åä¸€å±‚ç¥ç»ç½‘ç»œè¿ç®—è¿‡ç¨‹æ•°æ®ä¸ºäº†åå‘ä¼ æ’­ç®—æ³•
+    vector<double> RUN_NETWORK_PROCESS_LAST;//ç”¨äºå­˜å‚¨æœ€åä¸€å±‚ç¥ç»ç½‘ç»œè¿ç®—è¿‡ç¨‹æ•°æ®
+    vector<vector<vector<vector<vector<double>>>>> NETWORK_WEIGHT;//é™¤æœ€åä¸€å±‚å¤–çš„æ‰€æœ‰æƒé‡
+    vector<vector<vector<double>>> LAST_NETWORK_WEIGHT;//æœ€åä¸€å±‚çš„æƒé‡
+    //åˆå§‹åŒ–ä¾æ¬¡ä¸ºè¾“å…¥è¡Œã€åˆ—ã€é™¤æœ€åä¸€å±‚å¤–ç¥ç»ç½‘ç»œå±‚æ•°ã€æœ€åä¸€å±‚ç¥ç»ç½‘ç»œç¥ç»å…ƒæ•°é‡
     WLZH_network(int IN_ROW_, int IN_LINE_, int NETWORK_WEIGHT_NUM_, int LAST_NETWORK_WEIGHT_NUM_) {
         IN_ROW = IN_ROW_;
         IN_LINE = IN_LINE_;
+        IN_IMAGE_DATA = vector<vector<double>>(IN_ROW, vector<double>(IN_LINE));
         NETWORK_WEIGHT_NUM = NETWORK_WEIGHT_NUM_;
+        RUN_NETWORK_PROCESS = vector<vector<vector<double>>>(NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));
+        RUN_NETWORK_PROCESS_FOR_BP = vector<vector<vector<double>>>(NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));
+        NETWORK_WEIGHT = vector<vector<vector<vector<vector<double>>>>>(NETWORK_WEIGHT_NUM, vector<vector<vector<vector<double>>>>(IN_ROW, vector<vector<vector<double>>>(IN_LINE, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)))));
         LAST_NETWORK_WEIGHT_NUM = LAST_NETWORK_WEIGHT_NUM_;
+        RUN_NETWORK_PROCESS_LAST_FOR_BP = vector<double>(LAST_NETWORK_WEIGHT_NUM);
+        RUN_NETWORK_PROCESS_LAST = vector<double>(LAST_NETWORK_WEIGHT_NUM);
+        LAST_NETWORK_WEIGHT = vector<vector<vector<double>>>(LAST_NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));
     }
-    vector<vector<double>> IN_IMAGE_DATA = vector<vector<double>>(IN_ROW, vector<double>(IN_LINE));//ÊäÈëÊı¾İ
-    vector<vector<vector<double>>> RUN_NETWORK_PROCESS = vector<vector<vector<double>>>(NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));//ÓÃÓÚ´æ´¢Éñ¾­ÍøÂçÔËËã¹ı³Ì
-    vector<vector<vector<double>>> RUN_NETWORK_PROCESS_FOR_BP = vector<vector<vector<double>>>(NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));//ÓÃÓÚ´æ´¢Éñ¾­ÍøÂçÔËËã¹ı³ÌÎªÁË·´Ïò´«²¥Ëã·¨
-    vector<double> RUN_NETWORK_PROCESS_LAST_FOR_BP = vector<double>(LAST_NETWORK_WEIGHT_NUM);//ÓÃÓÚ´æ´¢×îºóÒ»²ãÉñ¾­ÍøÂçÔËËã¹ı³ÌÊı¾İÎªÁË·´Ïò´«²¥Ëã·¨
-    vector<double> RUN_NETWORK_PROCESS_LAST = vector<double>(LAST_NETWORK_WEIGHT_NUM);//ÓÃÓÚ´æ´¢×îºóÒ»²ãÉñ¾­ÍøÂçÔËËã¹ı³ÌÊı¾İ
-    vector<vector<vector<vector<vector<double>>>>> NETWORK_WEIGHT = vector<vector<vector<vector<vector<double>>>>>(NETWORK_WEIGHT_NUM, vector<vector<vector<vector<double>>>>(IN_ROW, vector<vector<vector<double>>>(IN_LINE, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)))));//³ı×îºóÒ»²ãÍâµÄËùÓĞÈ¨ÖØ
-    vector<vector<vector<double>>> LAST_NETWORK_WEIGHT = vector<vector<vector<double>>>(LAST_NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));//×îºóÒ»²ãµÄÈ¨ÖØ
-    void IN_IMAGE(vector<vector<double>>* IN_IMAGE_) {//´«ÈëÊäÈëÊı¾İ,Ö´ĞĞ·´Ïò´«²¥Ê±²»ÓÃÖ´ĞĞ
+    void IN_IMAGE(vector<vector<double>>* IN_IMAGE_) {//ä¼ å…¥è¾“å…¥æ•°æ®,æ‰§è¡Œåå‘ä¼ æ’­æ—¶ä¸ç”¨æ‰§è¡Œ
         IN_IMAGE_DATA = *IN_IMAGE_;
     }
-    void IN_NETWORK_WEIGHT(vector<vector<vector<vector<vector<double>>>>>* NETWORK_WEIGHT_) {//´«Èë³ı×îºóÒ»²ãÍâµÄËùÓĞÈ¨ÖØ£¬ÑµÁ·Ä£Ê½ÏÂ½¨ÒéËæ»ú³õÊ¼»¯
+    void IN_NETWORK_WEIGHT(vector<vector<vector<vector<vector<double>>>>>* NETWORK_WEIGHT_) {//ä¼ å…¥é™¤æœ€åä¸€å±‚å¤–çš„æ‰€æœ‰æƒé‡ï¼Œè®­ç»ƒæ¨¡å¼ä¸‹å»ºè®®éšæœºåˆå§‹åŒ–
         NETWORK_WEIGHT = *NETWORK_WEIGHT_;
     }
-    void IN_LAST_NETWORK_WEIGHT(vector<vector<vector<double>>>* LAST_NETWORK_WEIGHT_) {//´«Èë×îºóÒ»²ãµÄÈ¨ÖØ£¬ÑµÁ·Ä£Ê½ÏÂ½¨ÒéËæ»ú³õÊ¼»¯
+    void IN_LAST_NETWORK_WEIGHT(vector<vector<vector<double>>>* LAST_NETWORK_WEIGHT_) {//ä¼ å…¥æœ€åä¸€å±‚çš„æƒé‡ï¼Œè®­ç»ƒæ¨¡å¼ä¸‹å»ºè®®éšæœºåˆå§‹åŒ–
         LAST_NETWORK_WEIGHT = *LAST_NETWORK_WEIGHT_;
     }
-    Activation_function_NETWORK_ Activation_function_NETWORK;//³ı×îºóÒ»²ãÍâµÄ¼¤»îº¯Êı
-    Activation_function_NETWORK_ Activation_function_last_NETWORK;//×îºóÒ»²ã¼¤»îº¯Êı
-    Function_based Function_Based_;//ËğÊ§º¯Êı
-    Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Else;//³ı×îºóÒ»²ãÍâµÄ¼¤»îº¯ÊıµÄµ¼Êı
-    Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Last;//×îºóÒ»²ãµÄ¼¤»îº¯ÊıµÄµ¼Êı
-    void SET_Activation_function_last_NETWORK(Activation_function_NETWORK_ Activation_function_NETWORK_IN) {//´«Èë³ı×îºóÒ»²ãÍâµÄ¼¤»îº¯Êı
+    Activation_function_NETWORK_ Activation_function_NETWORK;//é™¤æœ€åä¸€å±‚å¤–çš„æ¿€æ´»å‡½æ•°
+    Activation_function_NETWORK_ Activation_function_last_NETWORK;//æœ€åä¸€å±‚æ¿€æ´»å‡½æ•°
+    Function_based Function_Based_;//æŸå¤±å‡½æ•°
+    Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Else;//é™¤æœ€åä¸€å±‚å¤–çš„æ¿€æ´»å‡½æ•°çš„å¯¼æ•°
+    Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Last;//æœ€åä¸€å±‚çš„æ¿€æ´»å‡½æ•°çš„å¯¼æ•°
+    void SET_Activation_function_last_NETWORK(Activation_function_NETWORK_ Activation_function_NETWORK_IN) {//ä¼ å…¥é™¤æœ€åä¸€å±‚å¤–çš„æ¿€æ´»å‡½æ•°
         Activation_function_last_NETWORK = Activation_function_NETWORK_IN;
     }
-    void SET_Activation_function_ELSE_NETWORK(Activation_function_NETWORK_ Activation_function_NETWORK_IN_) {//´«Èë×îºóÒ»²ãµÄ¼¤»îº¯Êı
+    void SET_Activation_function_ELSE_NETWORK(Activation_function_NETWORK_ Activation_function_NETWORK_IN_) {//ä¼ å…¥æœ€åä¸€å±‚çš„æ¿€æ´»å‡½æ•°
         Activation_function_NETWORK = Activation_function_NETWORK_IN_;
     }
-    void SET_Function_Based(Function_based Function_based_) {//´«ÈëËğÊ§º¯Êı
+    void SET_Function_Based(Function_based Function_based_) {//ä¼ å…¥æŸå¤±å‡½æ•°
         Function_Based_ = Function_based_;
     }
-    void SET_Learn_Rate(double learn_rate_) {//ÉèÖÃÑ§Ï°ÂÊ
+    void SET_Learn_Rate(double learn_rate_) {//è®¾ç½®å­¦ä¹ ç‡
         learn_rate = learn_rate_;
     }
-    void SET_Activation_function_Derivatives_NETWORK_Else(Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Else_) {//´«Èë³ı×îºóÒ»²ãÍâµÄÉñ¾­Ôª¼¤»îº¯ÊıµÄµ¼Êı
+    void SET_Activation_function_Derivatives_NETWORK_Else(Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Else_) {//ä¼ å…¥é™¤æœ€åä¸€å±‚å¤–çš„ç¥ç»å…ƒæ¿€æ´»å‡½æ•°çš„å¯¼æ•°
         Activation_function_Derivatives_NETWORK_Else = Activation_function_Derivatives_NETWORK_Else_;
     }
-    void SET_Activation_function_Derivatives_NETWORK_Last(Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Last_) {//´«Èë³ı×îºóÒ»²ãµÄÉñ¾­Ôª¼¤»îº¯ÊıµÄµ¼Êı
+    void SET_Activation_function_Derivatives_NETWORK_Last(Activation_function_Derivatives_NETWORK_ Activation_function_Derivatives_NETWORK_Last_) {//ä¼ å…¥é™¤æœ€åä¸€å±‚çš„ç¥ç»å…ƒæ¿€æ´»å‡½æ•°çš„å¯¼æ•°
         Activation_function_Derivatives_NETWORK_Last = Activation_function_Derivatives_NETWORK_Last_;
     }
-    vector<double> RUN_network() {//ÔËĞĞÉñ¾­ÍøÂç
+    vector<double> RUN_network() {//è¿è¡Œç¥ç»ç½‘ç»œ
         for (int i1_network = 0; i1_network < IN_ROW; i1_network++) {
             for (int i2_network = 0; i2_network < IN_LINE; i2_network++) {
                 RUN_NETWORK_PROCESS_FOR_BP[0][i1_network][i2_network] = 0;
@@ -101,16 +109,26 @@ public:
         }
         return RUN_NETWORK_PROCESS_LAST;
     }
-    double Gradient_Descent(vector<double> target_) {//Ìİ¶ÈÏÂ½µËã·¨,ÊäÈëÄ¿±êÖµ,Êä³öËğÊ§º¯ÊıÊä³öµÄÎó²î£¬´ËËã·¨ºÜÂı£¬²»½¨ÒéÊ¹ÓÃ
-        double ERR = Function_Based_(target_, RUN_network());
-        double ERR_;
+    double Gradient_Descent(vector<vector<vector<double>>> IN_IMAGES_DATA, vector<vector<double>> target_) {//æ¢¯åº¦ä¸‹é™ç®—æ³•,è¾“å…¥ç›®æ ‡å€¼,è¾“å…¥å’Œåå‘ä¼ æ’­ç®—æ³•ä¸€æ ·,è¾“å‡ºæŸå¤±å‡½æ•°çš„è¾“å‡ºï¼Œæ­¤ç®—æ³•å¾ˆæ…¢ï¼Œä¸å»ºè®®ä½¿ç”¨,è€Œä¸”æˆ‘å¯èƒ½å†™é”™äº†
+        int len_IN = target_.size();
+        double ERR = 0;
+        double ERR_ = 0;
+        for (int i1_network = 0; i1_network < len_IN; i1_network++) {
+            ERR += Function_Based_(target_[i1_network], RUN_network());
+        }
+        ERR = ERR / len_IN;
         for (int i_NETWORK_WEIGHT_NUM = 0; i_NETWORK_WEIGHT_NUM < NETWORK_WEIGHT_NUM; i_NETWORK_WEIGHT_NUM++) {
             for (int i1_network = 0; i1_network < IN_ROW; i1_network++) {
                 for (int i2_network = 0; i2_network < IN_LINE; i2_network++) {
                     for (int i3_network = 0; i3_network < IN_ROW; i3_network++) {
                         for (int i4_network = 0; i4_network < IN_LINE; i4_network++) {
                             NETWORK_WEIGHT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network][i3_network][i4_network] += learn_rate;
-                            ERR_ = Function_Based_(target_, RUN_network());
+                            ERR_ = 0;
+                            for (int i1_network_R = 0; i1_network_R < len_IN; i1_network_R++) {
+                                IN_IMAGE_DATA = IN_IMAGES_DATA[i1_network_R];
+                                ERR_ += Function_Based_(target_[i1_network_R], RUN_network());
+                            }
+                            ERR_ = ERR_ / len_IN;
                             if (ERR_ < ERR) {
                                 ERR = ERR_;
                             }
@@ -118,7 +136,12 @@ public:
                                 NETWORK_WEIGHT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network][i3_network][i4_network] -= learn_rate;
                             }
                             NETWORK_WEIGHT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network][i3_network][i4_network] -= learn_rate;
-                            ERR_ = Function_Based_(target_, RUN_network());
+                            ERR_ = 0;
+                            for (int i1_network_R = 0; i1_network_R < len_IN; i1_network_R++) {
+                                IN_IMAGE_DATA = IN_IMAGES_DATA[i1_network_R];
+                                ERR_ += Function_Based_(target_[i1_network_R], RUN_network());
+                            }
+                            ERR_ = ERR_ / len_IN;
                             if (ERR_ < ERR) {
                                 ERR = ERR_;
                             }
@@ -134,7 +157,12 @@ public:
             for (int i2_network = 0; i2_network < IN_ROW; i2_network++) {
                 for (int i3_network = 0; i3_network < IN_LINE; i3_network++) {
                     LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] += learn_rate;
-                    ERR_ = Function_Based_(target_, RUN_network());
+                    ERR_ = 0;
+                    for (int i1_network_R = 0; i1_network_R < len_IN; i1_network_R++) {
+                        IN_IMAGE_DATA = IN_IMAGES_DATA[i1_network_R];
+                        ERR_ += Function_Based_(target_[i1_network_R], RUN_network());
+                    }
+                    ERR_ = ERR_ / len_IN;
                     if (ERR_ < ERR) {
                         ERR = ERR_;
                     }
@@ -142,7 +170,12 @@ public:
                         LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] -= learn_rate;
                     }
                     LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] -= learn_rate;
-                    ERR_ = Function_Based_(target_, RUN_network());
+                    ERR_ = 0;
+                    for (int i1_network_R = 0; i1_network_R < len_IN; i1_network_R++) {
+                        IN_IMAGE_DATA = IN_IMAGES_DATA[i1_network_R];
+                        ERR_ += Function_Based_(target_[i1_network_R], RUN_network());
+                    }
+                    ERR_ = ERR_ / len_IN;
                     if (ERR_ < ERR) {
                         ERR = ERR_;
                     }
@@ -154,7 +187,7 @@ public:
         }
         return ERR;
     }
-    double Back_Propagation(vector<vector<vector<double>>> IN_IMAGES_DATA, vector<vector<double>> target_) {//·´Ïò´«²¥Ëã·¨,ÊäÈëÍ¼ÏñºÍÆÚÍûÖµ£¨¿ÉÊäÈë¶à×é£©
+    double Back_Propagation(vector<vector<vector<double>>> IN_IMAGES_DATA, vector<vector<double>> target_) {//åå‘ä¼ æ’­ç®—æ³•,è¾“å…¥å›¾åƒå’ŒæœŸæœ›å€¼ï¼ˆå¯è¾“å…¥å¤šç»„ï¼‰è¾“å‡ºæŸå¤±å‡½æ•°çš„è¾“å‡º
         int len_IN = IN_IMAGES_DATA.size();
         double ERR;
         vector<vector<vector<vector<vector<double>>>>> NETWORK_WEIGHT_WANT = vector<vector<vector<vector<vector<double>>>>>(NETWORK_WEIGHT_NUM, vector<vector<vector<vector<double>>>>(IN_ROW, vector<vector<vector<double>>>(IN_LINE, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)))));
@@ -178,7 +211,7 @@ public:
                 }
             }
         }
-        for (int ix_network = 0; ix_network < len_IN; ix_network++) {//±éÀúÊäÈëµÄÊı¾İ
+        for (int ix_network = 0; ix_network < len_IN; ix_network++) {//éå†è¾“å…¥çš„æ•°æ®
             IN_IMAGE_DATA = IN_IMAGES_DATA[ix_network];
             ERR = Function_Based_(target_[ix_network], RUN_network());
             for (int i1_network = 0; i1_network < NETWORK_WEIGHT_NUM; i1_network++) {
