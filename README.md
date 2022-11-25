@@ -1,4 +1,4 @@
-# WLZH-NOTEWORK
+# WLZH-NETWORK
 一个用纯C++写的神经网络
 写这个项目的目的有两个
 
