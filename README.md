@@ -112,6 +112,6 @@ in_s为输入数据集，格式：vector<vector<vector<double>>>，具体写法�
   
 mb为期望值，格式：vector<vector<double>>，具体写法参考例程
   
-输出损失函数的输出，若把WNOTEWORK.hpp中的第216行改为了RUN_network()
+输出最后一组数据的损失函数的输出，若把WNOTEWORK.hpp中的第216行改为了RUN_network()且在下面加一行ERR=0则输出无效
   
 此函数只运行一次没什么效果，最好多跑几次
