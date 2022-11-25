@@ -100,7 +100,7 @@ mb为期望值，格式：vector<vector<double>>，具体写法参考例程
   
 Function_B为损失函数，格式：double Function_B(double in)
   
-此函数可不调用，只不过需要把WNOTEWORK.hpp中的第216行改为RUN_network();且在下面加一行ERR=0;
+此函数可不调用，只不过需要把WNOTEWORK.hpp中的第216行改为RUN_network();
   
       MY_network.SET_Learn_Rate(0.01);
   
@@ -112,6 +112,6 @@ in_s为输入数据集，格式：vector<vector<vector<double>>>，具体写法�
   
 mb为期望值，格式：vector<vector<double>>，具体写法参考例程
   
-输出最后一组数据的损失函数的输出，若把WNOTEWORK.hpp中的第216行改为了RUN_network()且在下面加一行ERR=0则输出无效
+输出所有数据的损失函数的输出的平均值，若把WNOTEWORK.hpp中的第216行改为了RUN_network()则输出无效
   
 此函数只运行一次没什么效果，最好多跑几次
