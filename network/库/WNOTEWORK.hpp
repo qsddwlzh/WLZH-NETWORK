@@ -9,7 +9,7 @@ public:
     int LAST_NETWORK_WEIGHT_NUM = 10;//最后一层神经网络神经元数量
     int NETWORK_WEIGHT_NUM = 2;//除最后一层外神经网络层数
     double learn_rate;
-    
+
     vector<vector<double>> IN_IMAGE_DATA;//输入数据
     vector<vector<vector<double>>> RUN_NETWORK_PROCESS;//用于存储神经网络运算过程
     vector<vector<vector<double>>> RUN_NETWORK_PROCESS_FOR_BP;//用于存储神经网络运算过程为了反向传播算法
@@ -189,7 +189,7 @@ public:
     }
     double Back_Propagation(vector<vector<vector<double>>> IN_IMAGES_DATA, vector<vector<double>> target_) {//反向传播算法,输入图像和期望值（可输入多组）输出损失函数的输出
         int len_IN = IN_IMAGES_DATA.size();
-        double ERR = 0;
+        double ERR;
         vector<vector<vector<vector<vector<double>>>>> NETWORK_WEIGHT_WANT = vector<vector<vector<vector<vector<double>>>>>(NETWORK_WEIGHT_NUM, vector<vector<vector<vector<double>>>>(IN_ROW, vector<vector<vector<double>>>(IN_LINE, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)))));
         vector<vector<vector<double>>> LAST_NETWORK_WEIGHT_WANT = vector<vector<vector<double>>>(LAST_NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));
         vector<vector<vector<double>>> NETWORK_LAST_WANT = vector<vector<vector<double>>>(NETWORK_WEIGHT_NUM, vector<vector<double>>(IN_ROW, vector<double>(IN_LINE)));
@@ -213,11 +213,13 @@ public:
         }
         for (int ix_network = 0; ix_network < len_IN; ix_network++) {//遍历输入的数据
             IN_IMAGE_DATA = IN_IMAGES_DATA[ix_network];
-            ERR += Function_Based_(target_[ix_network], RUN_network());
+            ERR = Function_Based_(target_[ix_network], RUN_network());
             for (int i1_network = 0; i1_network < NETWORK_WEIGHT_NUM; i1_network++) {
                 for (int i2_network = 0; i2_network < IN_ROW; i2_network++) {
                     for (int i3_network = 0; i3_network < IN_LINE; i3_network++) {
+                        //cout << ix_network << ' ' << i1_network << ' ' << i2_network << ' ' << i3_network << endl;
                         NETWORK_LAST_WANT[i1_network][i2_network][i3_network] = 0;
+
                     }
                 }
             }
@@ -236,7 +238,7 @@ public:
                             for (int i4_network = 0; i4_network < IN_LINE; i4_network++) {
                                 if (NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 2 >= 0) {
                                     NETWORK_WEIGHT_WANT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] += NETWORK_WEIGHT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] - learn_rate * NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network] * RUN_NETWORK_PROCESS[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 2][i1_network][i2_network] * Activation_function_Derivatives_NETWORK_Else(RUN_NETWORK_PROCESS_FOR_BP[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network]);
-                                    NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM + 1][i2_network][i3_network] += NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network] * NETWORK_WEIGHT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] * Activation_function_Derivatives_NETWORK_Else(RUN_NETWORK_PROCESS_FOR_BP[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network]);
+                                    NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM + 1][i3_network][i4_network] += NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network] * NETWORK_WEIGHT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] * Activation_function_Derivatives_NETWORK_Else(RUN_NETWORK_PROCESS_FOR_BP[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network]);
                                 }
                                 else {
                                     NETWORK_WEIGHT_WANT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] += NETWORK_WEIGHT[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network][i3_network][i4_network] - learn_rate * NETWORK_LAST_WANT[i_NETWORK_WEIGHT_NUM][i1_network][i2_network] * IN_IMAGE_DATA[i1_network][i2_network] * Activation_function_Derivatives_NETWORK_Else(RUN_NETWORK_PROCESS_FOR_BP[NETWORK_WEIGHT_NUM - i_NETWORK_WEIGHT_NUM - 1][i1_network][i2_network]);
@@ -265,6 +267,6 @@ public:
                 }
             }
         }
-        return ERR / len_IN;
+        return ERR;
     }
 };
