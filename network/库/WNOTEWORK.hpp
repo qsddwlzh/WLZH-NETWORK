@@ -224,7 +224,7 @@ public:
             for (int i1_network = 0; i1_network < LAST_NETWORK_WEIGHT_NUM; i1_network++) {
                 for (int i2_network = 0; i2_network < IN_ROW; i2_network++) {
                     for (int i3_network = 0; i3_network < IN_LINE; i3_network++) {
-                        LAST_NETWORK_WEIGHT_WANT[i1_network][i2_network][i3_network] += LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] - learn_rate * (RUN_NETWORK_PROCESS_LAST[i1_network] - target_[ix_network][i1_network]) * Activation_function_Derivatives_NETWORK_Last(RUN_NETWORK_PROCESS_LAST_FOR_BP[i1_network]);
+                        LAST_NETWORK_WEIGHT_WANT[i1_network][i2_network][i3_network] += LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] - learn_rate * (RUN_NETWORK_PROCESS_LAST[i1_network] - target_[ix_network][i1_network]) * RUN_NETWORK_PROCESS[NETWORK_WEIGHT_NUM - 1][i2_network][i3_network] * Activation_function_Derivatives_NETWORK_Last(RUN_NETWORK_PROCESS_LAST_FOR_BP[i1_network]);
                         NETWORK_LAST_WANT[0][i2_network][i3_network] += (RUN_NETWORK_PROCESS_LAST[i1_network] - target_[ix_network][i1_network]) * LAST_NETWORK_WEIGHT[i1_network][i2_network][i3_network] * Activation_function_Derivatives_NETWORK_Last(RUN_NETWORK_PROCESS_LAST_FOR_BP[i1_network]);
                     }
                 }
