@@ -6,7 +6,7 @@
 #include <iomanip>
 #include<windows.h>
 #include <fstream>
-#include "WNOTEWORK - 副本.hpp"
+#include "WNOTEWORK.hpp"
 #define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1:0) //用于按键检测，从https://blog.csdn.net/cd_yourheart/article/details/127287605抄来的
 #define row 28//输入图像大小
 #define line 28
