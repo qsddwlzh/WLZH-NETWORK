@@ -91,6 +91,6 @@ in_s为输入数据集，格式：vector<vector<vector<double>>>，具体写法�
   
 mb为期望值，格式：vector<vector<double>>，具体写法参考例程
   
-输出所有数据的损失函数的输出的平均值，若把WNOTEWORK.hpp中的第216行改为了RUN_network()则输出无效
+输出:所有数据的损失函数的输出的平均值
   
 此函数只运行一次没什么效果，最好多运行几次
