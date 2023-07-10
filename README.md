@@ -67,26 +67,6 @@ IN_IMAGE_DATA_I为输入数据，格式为vector<vector<double>>，用二维数�
   
 训练
   
-梯度下降
-  
-      MY_network.SET_Function_Based(Function_B);
-  
-Function_B为损失函数，格式：double Function_B(double in)
-  
-      MY_network.SET_Learn_Rate(0.01);
-  
-设置学习率
-  
-      MY_network.Gradient_Descent(in_s, mb);
-  
-in_s为输入数据集，格式：vector<vector<vector<double>>>，具体写法参考例程
-  
-mb为期望值，格式：vector<vector<double>>，具体写法参考例程
-
-输出损失函数的输出
-  
-此函数很慢且只运行一次没什么效果，最好多跑几次
-  
 反向传播
   
       MY_network.SET_Activation_function_Derivatives_NETWORK_Else(sz_hs_ds);
@@ -100,8 +80,6 @@ mb为期望值，格式：vector<vector<double>>，具体写法参考例程
       MY_network.SET_Function_Based(Function_B);
   
 Function_B为损失函数，格式：double Function_B(double in)
-  
-此函数可不调用，只不过需要把WNOTEWORK.hpp中的第216行改为RUN_network();
   
       MY_network.SET_Learn_Rate(0.01);
   
