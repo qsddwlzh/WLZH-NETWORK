@@ -3,21 +3,12 @@
 此版本解决了反向传播算法无法收敛的问题
 
 一个用纯C++写的神经网络
-写这个项目的目的有两个
 
-一是想巩固我的神经网络类的知识
+写这个项目是想巩固我的关于神经网络的知识
 
-二是opencv的可移植性太差，而我想在单片机上跑人工智能
+训练部分目前已实现反向传播算法
 
-所以这个项目是纯C++写的，完全不依赖系统，可移植性很强
-
-且它不止可以用于图像识别，也可以用于别的人工智能项目
-
-训练部分目前已实现梯度下降和反向传播算法
-
-如果你想把它改为C程序也不难，只需改class即可
-
-下面是这个库的使用方法：
+下面是这个库的一些函数用法及如何初始化：
 
 首先，添加库文件
 
@@ -68,26 +59,6 @@ IN_IMAGE_DATA_I为输入数据，格式为vector<vector<double>>，用二维数�
 运行神经网络，输出最后输出层的输出值，格式为vector<double>
   
 训练
-  
-梯度下降
-  
-      MY_network.SET_Function_Based(Function_B);
-  
-Function_B为损失函数，格式：double Function_B(double in)
-  
-      MY_network.SET_Learn_Rate(0.01);
-  
-设置学习率
-  
-      MY_network.Gradient_Descent(in_s, mb);
-  
-in_s为输入数据集，格式：vector<vector<vector<double>>>，具体写法参考例程
-  
-mb为期望值，格式：vector<vector<double>>，具体写法参考例程
-
-输出损失函数的输出
-  
-此函数很慢且只运行一次没什么效果，最好多跑几次
   
 反向传播
   
